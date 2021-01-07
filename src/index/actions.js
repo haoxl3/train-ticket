@@ -87,7 +87,7 @@ export function setSelectedCity(city) {
 // 选择的出发地与目的地交换
 export function exchangeFromTo() {
     return (dispatch, getState) => {
-        const { from, to } = getState;
+        const { from, to } = getState();
         dispatch(setFrom(to));
         dispatch(setTo(from));
     };
