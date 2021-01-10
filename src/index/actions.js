@@ -30,10 +30,10 @@ export function setIsLoadingCityData(isLoadingCityData) {
         payload: isLoadingCityData,
     };
 }
-export function setCityData(cityDate) {
+export function setCityData(cityData) {
     return {
         type: ACTION_SET_CITY_DATA,
-        payload: cityDate,
+        payload: cityData,
     };
 }
 export function toggleHighSpeed() {
@@ -104,5 +104,44 @@ export function hideDateSelector() {
     return {
         type: ACTION_SET_IS_DATE_SELECTOR_VISIBLE,
         payload: false,
+    };
+}
+
+// 请求城市数据的异步action
+export function fetchCityData() {
+    return (dispatch, getState) => {
+        const { isLoadingCityData } = getState();
+        // 如果已加载则不做任何变化
+        if (isLoadingCityData) {
+            return;
+        }
+
+        // 先判断缓存中的数据是否过期
+        const cache = JSON.parse(localStorage.getItem('city_data_cache'));
+        if (Date.now() < cache.expires) {
+            dispatch(setSelectedCity(cache.data));
+            return;
+        }
+
+        // 如果未加载，先加isLoadingCityData置为true
+        dispatch(setIsLoadingCityData(true));
+        // 发送请求
+        fetch('/rest/cities?_' + Date.now())
+            .then(res => res.json())
+            .then(cityData => {
+                dispatch(setCityData(cityData));
+                // 将请求的数据缓存
+                localStorage.setItem(
+                    'city_data_cache',
+                    JSON.stringify({
+                        expires: Date.now() + 60 * 1000,
+                        data: cityData,
+                    })
+                );
+                dispatch(setIsLoadingCityData(false));
+            })
+            .catch(() => {
+                dispatch(setIsLoadingCityData(false));
+            });
     };
 }

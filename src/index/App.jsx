@@ -8,8 +8,15 @@ import DepartDate from './DepartDate.jsx';
 import HighSpeed from './HighSpeed.jsx';
 import Journey from './Journey.jsx';
 import Submit from './Submit.jsx';
+
+import CitySelector from '../common/CitySelector.jsx';
 // 从acctions中取出，在dispatch中修改
-import { exchangeFromTo, showCitySelector } from './actions';
+import {
+    exchangeFromTo,
+    showCitySelector,
+    hideCitySelector,
+    fetchCityData,
+} from './actions';
 function App(props) {
     // 触发此函数后header组件即使无更新也会重新渲染，为了避免这种情况，引入useCallback
     // 其第二个参数无内容便不会触发重新渲染
@@ -17,7 +24,15 @@ function App(props) {
         window.history.back();
     }, []);
     // 从下面的connect中取出from,to,dispatch
-    const { from, to, dispatch } = props;
+    const {
+        from,
+        to,
+        dispatch,
+        // citySelector所需要的初始值
+        isCitySelectorVisible,
+        isLoadingCityData,
+        cityData,
+    } = props;
     // // start
     // // 减少渲染，故也要用useCallback包裹
     // const doExchangeFromTo = useCallback(() => {
@@ -37,6 +52,16 @@ function App(props) {
             dispatch
         );
     }, []);
+    // 选择城市后的回调函数
+    const citySelectorCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                onBack: hideCitySelector,
+                fetchCityData, // 将action中的此方法传递给子组件
+            },
+            dispatch
+        );
+    }, []);
     return (
         <div>
             <div className="header-wrapper">
@@ -48,6 +73,12 @@ function App(props) {
                 <HighSpeed />
                 <Submit />
             </form>
+            <CitySelector
+                show={isCitySelectorVisible}
+                cityData={cityData}
+                isLoading={isLoadingCityData}
+                {...citySelectorCbs}
+            />
         </div>
     );
 }
