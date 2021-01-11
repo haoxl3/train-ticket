@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, memo } from 'react';
+import React, { useState, useMemo, useEffect, memo, useCallback } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import './CitySelector.css';
@@ -23,7 +23,7 @@ const CitySection = memo(function CitySection(props) {
     const { title, cities = [], onSelect } = props;
     return (
         <ul className="city-ul">
-            <li className="city-li" key="title">
+            <li className="city-li" key="title" data-cate={title}>
                 {title}
             </li>
             {cities.map(city => {
@@ -44,8 +44,14 @@ CitySection.propTypes = {
     onSelect: PropTypes.func.isRequired,
 };
 
+// 获得26个字母的数组
+const alphabet = Array.from(new Array(26), (ele, index) => {
+    return String.fromCharCode(65 + index);
+});
+
 const CityList = memo(function CityList(props) {
-    const { sections, onSelect } = props;
+    // 从cityList中取出父组件传来的值或方法
+    const { sections, onSelect, toAlpha } = props;
     return (
         <div className="city-list">
             <div className="city-cate">
@@ -60,12 +66,38 @@ const CityList = memo(function CityList(props) {
                     );
                 })}
             </div>
+            <div className="city-index">
+                {alphabet.map(alpha => {
+                    return (
+                        <AlphaIndex
+                            key={alpha}
+                            alpha={alpha}
+                            onClick={toAlpha}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 });
 CityList.propTypes = {
     sections: PropTypes.array.isRequired,
     onSelect: PropTypes.func.isRequired,
+    toAlpha: PropTypes.func.isRequired,
+};
+
+// 点击右侧字母列表跳转相应的位置
+const AlphaIndex = memo(function AlphaIndex(props) {
+    const { alpha, onClick } = props;
+    return (
+        <i className="city-index-item" onClick={() => onClick(alpha)}>
+            {alpha}
+        </i>
+    );
+});
+AlphaIndex.propTypes = {
+    alpha: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
 };
 
 const CitySelector = memo(function CitySelector(props) {
@@ -92,6 +124,11 @@ const CitySelector = memo(function CitySelector(props) {
         fetchCityData();
     }, [show, cityData, isLoading]);
 
+    // 点击字母跳转到相应的位置,useMemo(() => fn)等价于useCallback(fn)
+    const toAlpha = useCallback(alpha => {
+        document.querySelector(`[data-cate='${alpha}']`).scrollIntoView();
+    }, []);
+
     const outputCitySections = () => {
         if (isLoading) {
             return <div>loading</div>;
@@ -99,7 +136,11 @@ const CitySelector = memo(function CitySelector(props) {
 
         if (cityData) {
             return (
-                <CityList sections={cityData.cityList} onSelect={onSelect} />
+                <CityList
+                    sections={cityData.cityList}
+                    onSelect={onSelect}
+                    toAlpha={toAlpha}
+                />
             );
         }
 
