@@ -17,6 +17,7 @@ import {
     hideCitySelector,
     fetchCityData,
     setSelectedCity,
+    showDateSelector,
 } from './actions';
 function App(props) {
     // 触发此函数后header组件即使无更新也会重新渲染，为了避免这种情况，引入useCallback
@@ -33,6 +34,7 @@ function App(props) {
         isCitySelectorVisible,
         isLoadingCityData,
         cityData,
+        departDate,
     } = props;
     // // start
     // // 减少渲染，故也要用useCallback包裹
@@ -64,6 +66,15 @@ function App(props) {
             dispatch
         );
     }, []);
+    // 选择日期组件
+    const departDateCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                onClick: showDateSelector,
+            },
+            dispatch
+        );
+    }, []);
     return (
         <div>
             <div className="header-wrapper">
@@ -71,7 +82,7 @@ function App(props) {
             </div>
             <form className="form">
                 <Journey from={from} to={to} {...cbs} />
-                <DepartDate />
+                <DepartDate time={departDate} {...departDateCbs} />
                 <HighSpeed />
                 <Submit />
             </form>
