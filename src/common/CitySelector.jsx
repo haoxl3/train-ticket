@@ -86,6 +86,63 @@ CityList.propTypes = {
     toAlpha: PropTypes.func.isRequired,
 };
 
+// 搜索建议组件-点击列表
+const SuggestItem = memo(function SuggestItem(props) {
+    const { name, onClick } = props;
+    return (
+        <li className="" onClick={() => onClick(name)}>
+            {name}
+        </li>
+    );
+});
+SuggestItem.propTypes = {
+    name: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+};
+
+// 搜索建议组件-按文本框中的值进行搜索
+const Suggest = memo(function Suggest(props) {
+    const { searchKey, onSelect } = props;
+    // 缓存搜索结果
+    const [result, setResult] = useState([]);
+    useEffect(() => {
+        fetch('/rest/search?key=' + encodeURIComponent(searchKey))
+            .then(res => res.json())
+            .then(data => {
+                const { result, searchKey: sKey } = data;
+                if (sKey === searchKey) {
+                    setResult(result);
+                }
+            });
+    });
+    // 搜索结果的展示：无搜索结果时展示搜索的词
+    const fallBackResult = useMemo(() => {
+        if (!result.length) {
+            return [{ display: searchKey }];
+        }
+        return result;
+    }, [result, searchKey]);
+    return (
+        <div className="city-suggest">
+            <div className="city-suggest-ul">
+                {fallBackResult.map(item => {
+                    return (
+                        <SuggestItem
+                            key={item.display}
+                            name={item.display}
+                            onClick={onSelect}
+                        />
+                    );
+                })}
+            </div>
+        </div>
+    );
+});
+Suggest.propTypes = {
+    searchKey: PropTypes.string.isRequired,
+    onSelect: PropTypes.func.isRequired,
+};
+
 // 点击右侧字母列表跳转相应的位置
 const AlphaIndex = memo(function AlphaIndex(props) {
     const { alpha, onClick } = props;
@@ -181,6 +238,9 @@ const CitySelector = memo(function CitySelector(props) {
                     &#xf063;
                 </i>
             </div>
+            {Boolean(key) && (
+                <Suggest searchKey={key} onSelect={key => onSelect(key)} />
+            )}
             {outputCitySections()}
         </div>
     );
