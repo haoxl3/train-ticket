@@ -16,6 +16,7 @@ import {
     showCitySelector,
     hideCitySelector,
     fetchCityData,
+    setSelectedCity,
 } from './actions';
 function App(props) {
     // 触发此函数后header组件即使无更新也会重新渲染，为了避免这种情况，引入useCallback
@@ -58,6 +59,7 @@ function App(props) {
             {
                 onBack: hideCitySelector,
                 fetchCityData, // 将action中的此方法传递给子组件
+                onSelect: setSelectedCity,
             },
             dispatch
         );
