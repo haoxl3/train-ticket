@@ -22,6 +22,7 @@ import {
     showDateSelector,
     hideDateSelector,
     setDepartDate,
+    toggleHighSpeed,
 } from './actions';
 function App(props) {
     // 触发此函数后header组件即使无更新也会重新渲染，为了避免这种情况，引入useCallback
@@ -40,6 +41,7 @@ function App(props) {
         cityData,
         departDate,
         isDateSelectorVisible,
+        highSpeed,
     } = props;
     // // start
     // // 减少渲染，故也要用useCallback包裹
@@ -101,6 +103,15 @@ function App(props) {
         dispatch(setDepartDate(day));
         dispatch(hideDateSelector());
     }, []);
+    // 只看动车的按钮切换
+    const highSpeedCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                toggle: toggleHighSpeed,
+            },
+            dispatch
+        );
+    }, []);
     return (
         <div>
             <div className="header-wrapper">
@@ -109,7 +120,7 @@ function App(props) {
             <form className="form">
                 <Journey from={from} to={to} {...cbs} />
                 <DepartDate time={departDate} {...departDateCbs} />
-                <HighSpeed />
+                <HighSpeed highSpeed={highSpeed} {...highSpeedCbs} />
                 <Submit />
             </form>
             <CitySelector
