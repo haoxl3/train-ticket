@@ -107,6 +107,14 @@ export function hideDateSelector() {
     };
 }
 
+// 设置选择的日期
+export function setDepartDate(departDate) {
+    return {
+        type: ACTION_SET_DEPART_DATE,
+        payload: departDate,
+    };
+}
+
 // 请求城市数据的异步action
 export function fetchCityData() {
     return (dispatch, getState) => {

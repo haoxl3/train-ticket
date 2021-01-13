@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import './App.css';
 
 import Header from '../common/Header.jsx';
+import DateSelector from '../common/DateSelector.jsx';
 import DepartDate from './DepartDate.jsx';
 import HighSpeed from './HighSpeed.jsx';
 import Journey from './Journey.jsx';
 import Submit from './Submit.jsx';
+import { h0 } from '../common/fp';
 
 import CitySelector from '../common/CitySelector.jsx';
 // 从acctions中取出，在dispatch中修改
@@ -18,6 +20,8 @@ import {
     fetchCityData,
     setSelectedCity,
     showDateSelector,
+    hideDateSelector,
+    setDepartDate,
 } from './actions';
 function App(props) {
     // 触发此函数后header组件即使无更新也会重新渲染，为了避免这种情况，引入useCallback
@@ -35,6 +39,7 @@ function App(props) {
         isLoadingCityData,
         cityData,
         departDate,
+        isDateSelectorVisible,
     } = props;
     // // start
     // // 减少渲染，故也要用useCallback包裹
@@ -75,6 +80,27 @@ function App(props) {
             dispatch
         );
     }, []);
+    // 隐藏日期组件
+    const dateSelectorCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                onBack: hideDateSelector,
+            },
+            dispatch
+        );
+    }, []);
+    // 选择日期
+    const onSelectDate = useCallback(day => {
+        debugger;
+        if (!day) {
+            return;
+        }
+        if (day < h0()) {
+            return;
+        }
+        dispatch(setDepartDate(day));
+        dispatch(hideDateSelector());
+    }, []);
     return (
         <div>
             <div className="header-wrapper">
@@ -91,6 +117,11 @@ function App(props) {
                 cityData={cityData}
                 isLoading={isLoadingCityData}
                 {...citySelectorCbs}
+            />
+            <DateSelector
+                show={isDateSelectorVisible}
+                {...dateSelectorCbs}
+                onSelect={onSelectDate}
             />
         </div>
     );

@@ -90,7 +90,7 @@ CityList.propTypes = {
 const SuggestItem = memo(function SuggestItem(props) {
     const { name, onClick } = props;
     return (
-        <li className="" onClick={() => onClick(name)}>
+        <li className="city-suggest-li" onClick={() => onClick(name)}>
             {name}
         </li>
     );
@@ -114,7 +114,7 @@ const Suggest = memo(function Suggest(props) {
                     setResult(result);
                 }
             });
-    });
+    }, [searchKey]);
     // 搜索结果的展示：无搜索结果时展示搜索的词
     const fallBackResult = useMemo(() => {
         if (!result.length) {
