@@ -54,7 +54,6 @@ Week.propTypes = {
 
 // 月组件
 function Month(props) {
-    debugger;
     // onSelect以后要透传给week子组件
     const { startingTimeInMonth, onSelect } = props;
     // 获取传入的月份的每一天

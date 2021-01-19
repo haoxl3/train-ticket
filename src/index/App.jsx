@@ -93,7 +93,6 @@ function App(props) {
     }, []);
     // 选择日期
     const onSelectDate = useCallback(day => {
-        debugger;
         if (!day) {
             return;
         }
