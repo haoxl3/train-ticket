@@ -45,6 +45,7 @@ function App(props) {
         arriveTimeStart,
         arriveTimeEnd,
         dispatch,
+        trainList,
     } = props;
     useEffect(() => {
         const queries = URI.parseQuery(window.location.search);
@@ -141,10 +142,10 @@ function App(props) {
         nextDate
     );
 
-    // 保证前后hook一致
-    // if (!searchParsed) {
-    //     return null;
-    // }
+    // 若无要查询的数据，则返回null，若有则返回下面的html结构
+    if (!searchParsed) {
+        return null;
+    }
 
     return (
         <div>
@@ -158,7 +159,7 @@ function App(props) {
                 prev={prev}
                 next={next}
             />
-            <List />
+            <List list={trainList} />
             <Bottom />
         </div>
     );
