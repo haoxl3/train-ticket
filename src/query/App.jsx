@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import URI from 'urijs';
 import dayjs from 'dayjs';
@@ -24,7 +24,12 @@ import {
     setArriveStations,
     prevDate,
     nextDate,
+    toggleOrderType,
+    toggleHighSpeed,
+    toggleOnlyTickets,
+    toggleIsFiltersVisible,
 } from './actions';
+import { bindActionCreators } from 'redux';
 
 function App(props) {
     debugger;
@@ -32,10 +37,11 @@ function App(props) {
         from,
         to,
         departDate,
-        highSpeed,
+        highSpeed, // 是否只显示高铁动车
         searchParsed,
         orderType,
         onlyTickets,
+        isFiltersVisible, // 是否显示高级筛选
         checkedTicketTypes,
         checkedTrainTypes,
         checkedDepartStations,
@@ -142,6 +148,19 @@ function App(props) {
         nextDate
     );
 
+    // 将action与dispatch绑定到一起
+    const bottomCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                toggleOrderType,
+                toggleHighSpeed,
+                toggleOnlyTickets,
+                toggleIsFiltersVisible,
+            },
+            dispatch
+        );
+    }, []);
+
     // 若无要查询的数据，则返回null，若有则返回下面的html结构
     if (!searchParsed) {
         return null;
@@ -160,7 +179,13 @@ function App(props) {
                 next={next}
             />
             <List list={trainList} />
-            <Bottom />
+            <Bottom
+                highSpeed={highSpeed}
+                orderType={orderType}
+                onlyTickets={onlyTickets}
+                isFiltersVisible={isFiltersVisible}
+                {...bottomCbs}
+            />
         </div>
     );
 }
