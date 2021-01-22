@@ -28,11 +28,18 @@ import {
     toggleHighSpeed,
     toggleOnlyTickets,
     toggleIsFiltersVisible,
+    setCheckedTicketTypes,
+    setCheckedTrainTypes,
+    setCheckedDepartStations,
+    setCheckedArriveStations,
+    setDepartTimeStart,
+    setDepartTimeEnd,
+    setArriveTimeStart,
+    setArriveTimeEnd,
 } from './actions';
 import { bindActionCreators } from 'redux';
 
 function App(props) {
-    debugger;
     const {
         from,
         to,
@@ -52,6 +59,10 @@ function App(props) {
         arriveTimeEnd,
         dispatch,
         trainList,
+        ticketTypes,
+        trainTypes,
+        departStations,
+        arriveStations,
     } = props;
     useEffect(() => {
         const queries = URI.parseQuery(window.location.search);
@@ -115,6 +126,7 @@ function App(props) {
                 } = result;
 
                 dispatch(setTrainList(trains));
+                // 座位类别
                 dispatch(setTicketTypes(ticketType));
                 dispatch(setTrainTypes(trainType));
                 dispatch(setDepartStations(depStation));
@@ -156,6 +168,14 @@ function App(props) {
                 toggleHighSpeed,
                 toggleOnlyTickets,
                 toggleIsFiltersVisible,
+                setCheckedTicketTypes,
+                setCheckedTrainTypes,
+                setCheckedDepartStations,
+                setCheckedArriveStations,
+                setDepartTimeStart,
+                setDepartTimeEnd,
+                setArriveTimeStart,
+                setArriveTimeEnd,
             },
             dispatch
         );
@@ -185,6 +205,18 @@ function App(props) {
                 onlyTickets={onlyTickets}
                 isFiltersVisible={isFiltersVisible}
                 {...bottomCbs}
+                ticketTypes={ticketTypes}
+                trainTypes={trainTypes}
+                departStations={departStations}
+                arriveStations={arriveStations}
+                checkedTicketTypes={checkedTicketTypes}
+                checkedTrainTypes={checkedTrainTypes}
+                checkedDepartStations={checkedDepartStations}
+                checkedArriveStations={checkedArriveStations}
+                departTimeStart={departTimeStart}
+                departTimeEnd={departTimeEnd}
+                arriveTimeStart={arriveTimeStart}
+                arriveTimeEnd={arriveTimeEnd}
             />
         </div>
     );
