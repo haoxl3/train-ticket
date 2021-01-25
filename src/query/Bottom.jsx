@@ -2,6 +2,7 @@ import React, { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { ORDER_DEPART } from './constant';
+import Slider from './Slider';
 import './Bottom.css';
 
 const Filter = memo(function Filter(props) {
@@ -59,6 +60,7 @@ Option.propTypes = {
 };
 
 const BottomModal = memo(function BottomModal(props) {
+    debugger;
     const {
         ticketTypes,
         trainTypes,
@@ -111,6 +113,14 @@ const BottomModal = memo(function BottomModal(props) {
             ...checkedArriveStations,
         };
     });
+    const [localDepartTimeStart, setLocalDepartTimeStart] = useState(
+        departTimeStart
+    );
+    const [localDepartTimeEnd, setLocalDepartTimeEnd] = useState(departTimeEnd);
+    const [localArriveTimeStart, setLocalArriveTimeStart] = useState(
+        arriveTimeStart
+    );
+    const [localArriveTimeEnd, setLocalArriveTimeEnd] = useState(arriveTimeEnd);
     const optionGroup = [
         {
             title: '坐席类型',
@@ -149,6 +159,20 @@ const BottomModal = memo(function BottomModal(props) {
                         {optionGroup.map(group => (
                             <Option {...group} key={group.title} />
                         ))}
+                        <Slider
+                            title="出发时间"
+                            currentStartHours={localDepartTimeStart}
+                            currentEndHours={localDepartTimeEnd}
+                            onStartChanged={setLocalDepartTimeStart}
+                            onEndChanged={setLocalDepartTimeEnd}
+                        />
+                        <Slider
+                            title="到达时间"
+                            currentStartHours={localArriveTimeStart}
+                            currentEndHours={localArriveTimeEnd}
+                            onStartChanged={setLocalArriveTimeStart}
+                            onEndChanged={setLocalArriveTimeEnd}
+                        />
                     </div>
                 </div>
             </div>
