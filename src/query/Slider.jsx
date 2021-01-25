@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Slider.css';
+import useWinSize from '../common/useWinSize';
 import leftPad from 'left-pad';
 
 const Slider = memo(function Slider(props) {
@@ -18,6 +19,7 @@ const Slider = memo(function Slider(props) {
     const lastEndX = useRef();
     const range = useRef();
     const rangeWidth = useRef();
+    const winSize = useWinSize(); // 窗口自适应
     // 创建缓冲区，设置滑块分为24份
     const [start, setStart] = useState(() => (currentStartHours / 24) * 100);
     const [end, setEnd] = useState(() => (currentEndHours / 24) * 100);
@@ -57,7 +59,7 @@ const Slider = memo(function Slider(props) {
         rangeWidth.current = parseFloat(
             window.getComputedStyle(range.current).width
         );
-    }, []);
+    }, [winSize.width]);
     useEffect(() => {
         startHandle.current.addEventListener(
             'touchstart',
