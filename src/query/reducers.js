@@ -62,6 +62,7 @@ export default {
             case ACTION_SET_HIGH_SPEED:
                 return payload;
             case ACTION_SET_CHECKED_TRAIN_TYPES:
+                // 选择了高铁或动车，则只看高铁要高亮，也要选上
                 checkedTrainTypes = payload;
                 return Boolean(checkedTrainTypes[1] && checkedTrainTypes[5]);
             default:
@@ -138,11 +139,12 @@ export default {
         switch (type) {
             case ACTION_SET_CHECKED_TRAIN_TYPES:
                 return payload;
-            case ACTION_SET_HIGH_SPEED:
+            case ACTION_SET_HIGH_SPEED: // 是否选择动车与高铁
                 highSpeed = payload;
                 newCheckedTrainTypes = { ...state };
 
                 if (highSpeed) {
+                    // 让综合筛选里的动车与高铁被选择上
                     newCheckedTrainTypes[1] = true;
                     newCheckedTrainTypes[5] = true;
                 } else {
