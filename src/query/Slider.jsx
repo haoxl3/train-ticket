@@ -20,9 +20,20 @@ const Slider = memo(function Slider(props) {
     const range = useRef();
     const rangeWidth = useRef();
     const winSize = useWinSize(); // 窗口自适应
+    const prevCurrentStartHours = useRef(currentStartHours);
+    const prevCurrentEndHours = useRef(currentEndHours);
     // 创建缓冲区，设置滑块分为24份
     const [start, setStart] = useState(() => (currentStartHours / 24) * 100);
     const [end, setEnd] = useState(() => (currentEndHours / 24) * 100);
+    // 如果上一次开始/结束时间不等于现在的，则重新赋值
+    if (prevCurrentStartHours.current !== currentStartHours) {
+        setStart((currentStartHours / 24) * 100);
+        prevCurrentStartHours.current = currentStartHours;
+    }
+    if (prevCurrentEndHours.current !== currentEndHours) {
+        setEnd((currentEndHours / 24) * 100);
+        prevCurrentEndHours.current = currentEndHours;
+    }
     const startPercent = useMemo(() => {
         if (start > 100) {
             return 100;
