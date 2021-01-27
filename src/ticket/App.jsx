@@ -10,6 +10,7 @@ import Candidate from './Candidate';
 // import Schedule from './Schedule';
 import Nav from '../common/Nav';
 import useNav from '../common/useNav';
+import { TrainContext } from './context';
 import './App.css';
 
 // 异步导入schedule组件
@@ -32,7 +33,6 @@ import {
 } from './actions';
 
 function App(props) {
-    debugger;
     const {
         dispatch,
         departDate,
@@ -137,6 +137,16 @@ function App(props) {
                     {...detailCbs}
                 />
             </div>
+            <TrainContext.Provider
+                value={{
+                    trainNumber,
+                    departStation,
+                    arriveStation,
+                    departDate,
+                }}
+            >
+                <Candidate tickets={tickets} />
+            </TrainContext.Provider>
             {isScheduleVisible && (
                 <div
                     className="mask"
