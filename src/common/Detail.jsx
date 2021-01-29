@@ -19,7 +19,6 @@ const Detail = memo(function Detail(props) {
         departStation,
         arriveStation,
         durationStr,
-        toggleIsScheduleVisible,
     } = props;
     const departDateStr = useMemo(() => format(departDate), [departDate]);
     const arriveDateStr = useMemo(() => format(arriveDate), [arriveDate]);
@@ -33,16 +32,7 @@ const Detail = memo(function Detail(props) {
                 </div>
                 <div className="middle">
                     <p className="train-name">{trainNumber}</p>
-                    <p className="train-mid">
-                        <span className="left"></span>
-                        <span
-                            className="schedule"
-                            onClick={() => toggleIsScheduleVisible()}
-                        >
-                            时刻表
-                        </span>
-                        <span className="right"></span>
-                    </p>
+                    <p className="train-mid">{props.children}</p>
                     <p className="train-time">耗时{durationStr}</p>
                 </div>
                 <div className="right">

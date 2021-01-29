@@ -99,6 +99,7 @@ export function setSearchParsed(searchParsed) {
 }
 
 export function fetchInitial(url) {
+    // 异步请求
     return (dispatch, getState) => {
         fetch(url)
             .then(res => res.json())
