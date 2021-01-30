@@ -322,7 +322,7 @@ export function showTicketTypeMenu(id) {
                     } else {
                         const adult = passengers.find(
                             passenger =>
-                                passenger.id === id &&
+                                passenger.id !== id &&
                                 passenger.ticketType === 'adult'
                         );
 
