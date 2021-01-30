@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import URI from 'urijs';
 import dayjs from 'dayjs';
@@ -19,7 +19,12 @@ import {
     setDepartDate,
     setSearchParsed,
     fetchInitial, // 异步请求
+    createAdult, // 添加成人
+    createChild, // 添加儿童
+    removePassenger, // 删除乘客
+    updatePassenger, // 更新乘客信息
 } from './actions';
+import { bindActionCreators } from 'redux';
 
 function App(props) {
     const {
@@ -68,6 +73,19 @@ function App(props) {
         dispatch(fetchInitial(url));
     }, [searchParsed, departStation, arriveStation, seatType, departDate]);
 
+    // 将action与dispatch绑定
+    const passengersCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                createAdult,
+                createChild,
+                removePassenger, // 删除乘客
+                updatePassenger,
+            },
+            dispatch
+        );
+    }, []);
+
     if (!searchParsed) {
         return null;
     }
@@ -94,6 +112,8 @@ function App(props) {
                     ></span>
                 </Detail>
             </div>
+            <Ticket price={price} type={seatType} />
+            <Passengers passengers={passengers} {...passengersCbs} />
         </div>
     );
 }
