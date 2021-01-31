@@ -143,6 +143,7 @@ function App(props) {
             {passengers.length > 0 && (
                 <Choose passengers={passengers} {...chooseCbs} />
             )}
+            <Account length={passengers.length} price={price} />
             <Menu {...menuCbs} show={isMenuVisible} {...menu} />
         </div>
     );
