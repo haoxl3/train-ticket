@@ -48,5 +48,8 @@ const Choose = memo(function Choose(props) {
         </div>
     );
 });
-Choose.propTypes = {};
+Choose.propTypes = {
+    passengers: PropTypes.array.isRequired,
+    updatePassenger: PropTypes.func.isRequired,
+};
 export default Choose;
